@@ -1,8 +1,10 @@
-package test.socket.demo;
+package test.socket.demo.controler;
 
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
+import test.socket.demo.model.Greeting;
+import test.socket.demo.model.HelloMessage;
 
 @Controller
 public class GreetingController {

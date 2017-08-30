@@ -1,4 +1,4 @@
-package test.socket.demo;
+package test.socket.demo.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
