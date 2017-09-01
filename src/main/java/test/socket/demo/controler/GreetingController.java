@@ -3,7 +3,9 @@ package test.socket.demo.controler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 import test.socket.demo.model.*;
 import test.socket.demo.service.UserUtil;
 
@@ -11,6 +13,8 @@ import test.socket.demo.service.UserUtil;
 public class GreetingController {
     @Autowired
     private UserUtil userUtil;
+    @Autowired
+    private SimpMessagingTemplate simpMessagingTemplate;
 
     @MessageMapping("/hello")
     @SendTo("/topic/greetings")
@@ -32,5 +36,13 @@ public class GreetingController {
             resource.setMessage("User " + dto.getLogin() + " is not authorised");
         }
         return resource;
+    }
+
+// view resolver not configure, but web-socket connection work
+    @RequestMapping(value = "/sometest")
+    public String someTest() {
+        simpMessagingTemplate.convertAndSend("/field/gold",
+                new RateResource("Some Test"));
+        return "sometest";
     }
 }
