@@ -6,8 +6,13 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import test.socket.demo.model.*;
+import test.socket.demo.model.Greeting;
+import test.socket.demo.model.HelloMessage;
+import test.socket.demo.model.RateDto;
+import test.socket.demo.model.RateResource;
 import test.socket.demo.service.UserUtil;
+
+import javax.naming.AuthenticationException;
 
 @Controller
 public class GreetingController {
@@ -25,24 +30,18 @@ public class GreetingController {
 
     @MessageMapping("/bidding")
     @SendTo("/field/gold")
-    public RateResource rateResource(RateDto dto) {
-        RateResource resource = new RateResource();
-        if (userUtil.getUsers().contains(new User(dto.getLogin(), dto.getPassword()))) {
-            UserUtil.startRate += dto.getRate();
-            resource.setMessage("Rate: " + UserUtil.startRate + ". " + "User " + dto.getLogin() +
-                    " increased the rate on " + dto.getRate() + ".");
-            return resource;
-        } else {
-            resource.setMessage("User " + dto.getLogin() + " is not authorised");
-        }
-        return resource;
+    public RateResource rateResource(RateDto dto) throws AuthenticationException {
+        return userUtil.processingReqest(dto);
     }
 
-// view resolver not configure, but web-socket connection work
-    @RequestMapping(value = "/sometest")
-    public String someTest() {
-        simpMessagingTemplate.convertAndSend("/field/gold",
-                new RateResource("Some Test"));
-        return "sometest";
+    public void sendInfoToPrivateMessage() {
+        simpMessagingTemplate.convertAndSend("/private/message",
+                new RateResource("Unregistered user tried to connect!"));
+    }
+
+    @MessageMapping("/private_message")
+    @SendTo("/private/message")
+    public RateResource privateMessage(HelloMessage message) throws Exception {
+        return new RateResource("Hello, " + message.getName() + "!");
     }
 }

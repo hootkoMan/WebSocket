@@ -85,6 +85,36 @@
             </table>
         </div>
     </div>
+    <div class="row"><h4>Private Websocket</h4></div>
+    <div class="row">
+        <div class="col-md-6">
+            <button id="connectToPrivate" class="btn btn-default" type="submit">Connect To Private Channel</button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <form class="form-inline">
+                <div class="form-group">
+                    <label for="pr_message">Private message:</label>
+                    <input id="pr_message" type="text" class="form-control" placeholder="Private message...">
+                </div>
+                <button id="send_pr_message" class="btn btn-default" type="submit">Send private message</button>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <table id="pr_message_tab" class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Private message</th>
+                </tr>
+                </thead>
+                <tbody id="pr_mes">
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 </body>
 </html>

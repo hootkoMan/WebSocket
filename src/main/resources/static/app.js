@@ -19,6 +19,12 @@ $(function () {
     $("#send_rate").click(function () {
         sendRate();
     });
+    $("#connectToPrivate").click(function () {
+        connectToPrivateMessage();
+    });
+    $("#send_pr_message").click(function () {
+        sendPrivateMessage();
+    });
 });
 
 function sendName() {
@@ -96,4 +102,25 @@ function sendRate() {
 
 function showRate(message) {
     $("#rates").append("<tr><td>" + message + "</td></tr>");
+}
+
+function connectToPrivateMessage() {
+    var socket = new SockJS('/private-websocket');
+    stompClient = Stomp.over(socket);
+    stompClient.connect({}, function (frame) {
+        console.log('Connected: ' + frame);
+        stompClient.subscribe('/private/message', function (resource) {
+            showPrMes(JSON.parse(resource.body).message);
+        });
+    });
+}
+
+function sendPrivateMessage() {
+    stompClient.send("/app/private_message", {}, JSON.stringify({
+        'name': $("#pr_message").val()
+    }));
+}
+
+function showPrMes(message) {
+    $("#pr_mes").append("<tr><td>" + message + "</td></tr>");
 }
